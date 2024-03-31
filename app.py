@@ -4,6 +4,14 @@ from dash import Dash, html, dcc
 from dash.dependencies import Input, Output  # Make sure to import Input and Output
 import pandas as pd
 import plotly.express as px
+barca_squad_df = pd.read_csv('/Users/dor.frechter/Desktop/DS4003/Final Project/data/data.csv')
+barca_squad_df.drop(columns=['shirt_number','is_overseas','birthdate','team'], axis=1,inplace=True)
+barca_squad_df['country'] = barca_squad_df['country'].astype('string')
+barca_squad_df['position'] = barca_squad_df['position'].astype('string')
+barca_squad_df['role'] = barca_squad_df['role'].astype('string')
+barca_squad_df['full_name'] = barca_squad_df['full_name'].astype('string')
+barca_squad_df['season'] = barca_squad_df['season'].astype('string')
+barca_squad_df.head()
 
 #get dataset
 df = pd.read_csv('gdp_pcap.csv')
