@@ -25,7 +25,8 @@ app = Dash(__name__)
 server = app.server  # Expose the server variable for Heroku
 
 app.layout = html.Div([
-    html.H1('GDP Per Capita Over Time', className='header'), #html elements to format the app
+    html.H1('The GOAT - Leo Messi in Numbers', className='header'), #html elements to format the app
+    html.H3()
 ])
 
 
