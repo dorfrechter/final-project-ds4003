@@ -24,7 +24,8 @@ messi_goals_df.head()
 app = Dash(__name__)
 server = app.server  # Expose the server variable for Heroku
 
-app.layout = html.Div([
+app.layout = html.Div(className='layout'[
+     html.Img(src='assets/images/BarcaLogo.png', style={'position': 'absolute', 'top': '0', 'left': '0'}),
     html.H1('The GOAT - Leo Messi in Numbers', className='header'), #html elements to format the app
     html.H3()
 ])

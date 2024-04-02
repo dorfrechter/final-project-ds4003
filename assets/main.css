@@ -1,7 +1,11 @@
+.background{
+    background:linear-gradient(to bottom, #2823b8, #c71e0f);
+}
+
 .header{
     padding: 10px;
     text-align: center;
-    color: red;
+    color: black;
     font-family: 'Roboto', sans-serif;
     font-weight: 700;
     text-transform: uppercase;
