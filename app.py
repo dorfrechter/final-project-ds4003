@@ -127,8 +127,8 @@ app.layout = html.Div(children=[
      Input('goaltype-dropdown', 'value')]
 )
 def update_graph(selected_season_range, selected_goal_types):
-    # Check if no goal types are selected or only 'total' is selected
-    if not selected_goal_types or (selected_goal_types == ['total'] and len(selected_goal_types) == 1):
+    # Check if no goal types are selected
+    if not selected_goal_types:
         # Return a blank figure
         return px.line(title='Select goal types to view data')
 
@@ -140,11 +140,13 @@ def update_graph(selected_season_range, selected_goal_types):
     # Initialize an empty DataFrame for the final data
     df_final = pd.DataFrame()
 
+    # Process 'total' separately to ensure it gets included when selected
     if 'total' in selected_goal_types:
         df_agg = filtered_df.groupby('Season').size().reset_index(name='Goals')
         df_agg['Type'] = 'Total'
         df_final = pd.concat([df_final, df_agg])
 
+    # Process other goal types
     for goal_type in selected_goal_types:
         if goal_type != 'total':  # Exclude 'total' since it's already processed
             df_filtered = filtered_df[filtered_df['Type'] == goal_type]
@@ -157,6 +159,7 @@ def update_graph(selected_season_range, selected_goal_types):
     fig.update_layout(xaxis_title='Season', yaxis_title='Number of Goals', xaxis={'type': 'category'})
 
     return fig
+
 
 if __name__ == '__main__': #run the app
     app.run_server(debug=True)
