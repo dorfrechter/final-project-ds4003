@@ -118,7 +118,7 @@ app.layout = html.Div(children=[
           ]),
 ]   
              ),
-        html.H5('All data is true to 3/4/23 unless states otherwise.', className='subheader', style={'margin-top': '2px'}),
+        html.H5('All data is true to 3/4/23 unless stated otherwise.', className='subheader', style={'margin-top': '2px'}),
 ], style={'background': 'linear-gradient(to bottom, #211d9e, #a83250)'})
 
 @app.callback(
