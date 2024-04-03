@@ -155,7 +155,7 @@ def update_graph(selected_season_range, selected_goal_types):
             df_final = pd.concat([df_final, df_agg])
 
     # Generate the figure using Plotly Express line chart
-    fig = px.line(df_final, x='Season', y='Goals', color='Type', title='Goals by Type and Season', markers=True)
+    fig = px.line(df_final, x='Season', y='Goals', color='Type', title='Goals for Club by Type and Season', markers=True)
     fig.update_layout(xaxis_title='Season', yaxis_title='Number of Goals', xaxis={'type': 'category'})
 
     return fig
