@@ -72,7 +72,7 @@ app.layout = html.Div(children=[
     html.Img(src='assets/images/messi_smile.png', className='messi-image'),
     html.Img(src='assets/images/BarcaLogo.png', style={'position': 'absolute', 'top': '0', 'left': '0', 'width': '100px', 'height': '100px', 'padding': '30px', 'margin-left':'35   px'}),
     html.H1('The GOAT - Leo Messi in Numbers', className='header'), #html elements to format the app
-    html.H3('Messi\'s Goals split by season and type', className='subheader'), #html elements to format the app
+    html.H3('A statistical analysis of his career club goals', className='subheader'), #html elements to format the app
      html.Div(className='content-container', children=[
              html.Div(className='stats'
              , children=[
