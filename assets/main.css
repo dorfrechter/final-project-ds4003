@@ -107,7 +107,6 @@ P {
 }
 
 
-
 /* Removed duplicate .controls-container for clarity */
 
 .messi-image {
@@ -143,10 +142,10 @@ P {
 }
 
 .Select-control {
-    background-color: rgb(53, 89, 144) !important;
+    background-color: rgb(208, 73, 113) !important;
 }
 
-.Select--multi .Select-value-label {
+.Select--multi .Select-value .Select-value-label {
     color: white !important;
 }
 

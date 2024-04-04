@@ -111,7 +111,7 @@ app.layout = html.Div(children=[
                 id='goaltype-dropdown',
                 options=[{'label': goal_type, 'value': goal_type} for goal_type in unique_goal_types],
                 value='total',  # Default value set to 'total'
-                multi=True  # Allow multiple selections
+                #multi=True  # Allow multiple selections
             )
         ])
          ])
@@ -126,11 +126,44 @@ app.layout = html.Div(children=[
     [Input('season-range-slider', 'value'),
      Input('goaltype-dropdown', 'value')]
 )
-def update_graph(selected_season_range, selected_goal_types):
-    # Check if no goal types are selected
-    if not selected_goal_types:
+# def update_graph(selected_season_range, selected_goal_types):
+#     # Check if no goal types are selected
+#     if not selected_goal_types:
+#         # Return a blank figure
+#         return px.line(title='Select goal types to view data')
+
+#     start_season_index, end_season_index = selected_season_range
+#     selected_seasons = seasons[start_season_index:end_season_index + 1]
+    
+#     filtered_df = messi_goals_df[messi_goals_df['Season'].isin(selected_seasons)]
+
+#     # Initialize an empty DataFrame for the final data
+#     df_final = pd.DataFrame()
+
+#     # Process 'total' separately to ensure it gets included when selected
+#     if 'total' in selected_goal_types:
+#         df_agg = filtered_df.groupby('Season').size().reset_index(name='Goals')
+#         df_agg['Type'] = 'Total'
+#         df_final = pd.concat([df_final, df_agg])
+
+#     # Process other goal types
+#     for goal_type in selected_goal_types:
+#         if goal_type != 'total':  # Exclude 'total' since it's already processed
+#             df_filtered = filtered_df[filtered_df['Type'] == goal_type]
+#             df_agg = df_filtered.groupby('Season').size().reset_index(name='Goals')
+#             df_agg['Type'] = goal_type
+#             df_final = pd.concat([df_final, df_agg])
+
+#     # Generate the figure using Plotly Express line chart
+#     fig = px.line(df_final, x='Season', y='Goals', color='Type', title='Goals for Club by Type and Season', markers=True)
+#     fig.update_layout(xaxis_title='Season', yaxis_title='Number of Goals', xaxis={'type': 'category'})
+
+#     return fig
+def update_graph(selected_season_range, selected_goal_type):
+    # Check if no goal type is selected
+    if not selected_goal_type:
         # Return a blank figure
-        return px.line(title='Select goal types to view data')
+        return px.line(title='Select a goal type to view data')
 
     start_season_index, end_season_index = selected_season_range
     selected_seasons = seasons[start_season_index:end_season_index + 1]
@@ -140,25 +173,25 @@ def update_graph(selected_season_range, selected_goal_types):
     # Initialize an empty DataFrame for the final data
     df_final = pd.DataFrame()
 
-    # Process 'total' separately to ensure it gets included when selected
-    if 'total' in selected_goal_types:
+    # Process the selected goal type
+    if selected_goal_type == 'total':
         df_agg = filtered_df.groupby('Season').size().reset_index(name='Goals')
-        df_agg['Type'] = 'Total'
-        df_final = pd.concat([df_final, df_agg])
+    else:
+        df_filtered = filtered_df[filtered_df['Type'] == selected_goal_type]
+        df_agg = df_filtered.groupby('Season').size().reset_index(name='Goals')
 
-    # Process other goal types
-    for goal_type in selected_goal_types:
-        if goal_type != 'total':  # Exclude 'total' since it's already processed
-            df_filtered = filtered_df[filtered_df['Type'] == goal_type]
-            df_agg = df_filtered.groupby('Season').size().reset_index(name='Goals')
-            df_agg['Type'] = goal_type
-            df_final = pd.concat([df_final, df_agg])
+    df_agg['Type'] = selected_goal_type  # Assign the selected goal type
+    df_final = pd.concat([df_final, df_agg])
+
+    # Sort df_final by 'Season' to maintain the correct order
+    df_final = df_final.sort_values(by='Season')
 
     # Generate the figure using Plotly Express line chart
-    fig = px.line(df_final, x='Season', y='Goals', color='Type', title='Goals for Club by Type and Season', markers=True)
+    fig = px.line(df_final, x='Season', y='Goals', color='Type', title='Goals for Club by Selected Type and Season', markers=True)
     fig.update_layout(xaxis_title='Season', yaxis_title='Number of Goals', xaxis={'type': 'category'})
 
     return fig
+
 
 
 if __name__ == '__main__': #run the app
