@@ -112,13 +112,14 @@ app.layout = html.Div(children=[
                 options=[{'label': goal_type, 'value': goal_type} for goal_type in unique_goal_types],
                 value='total',  # Default value set to 'total'
                 multi=True  # Allow multiple selections
+                ,style={'margin-bottom': '100px'}
             )
         ])
          ])
           ]),
 ]   
              ),
-        html.H5('All data is true to 3/4/23 unless stated otherwise.', className='subheader', style={'margin-top': '2px'}),
+        html.H5('All data is true to 3/4/23 unless stated otherwise.', className='subheader', style={'margin-bottom': '2px'}),
 ], style={'background': 'linear-gradient(to bottom, #211d9e, #a83250)'})
 
 @app.callback(
@@ -171,9 +172,20 @@ def update_graph(selected_season_range, selected_goal_types):
     fig.update_layout(
         xaxis_title='Season',
         yaxis_title='Number of Goals',
-        xaxis={'type': 'category', 'categoryorder': 'array', 'categoryarray': seasons}
+        xaxis={'type': 'category', 'categoryorder': 'array', 'categoryarray': seasons},
+        plot_bgcolor='rgba(0,0,0,0)',  
+        paper_bgcolor='#F0F2F6',  
+        margin=dict(t=60, b=60, l=60, r=60), 
+        template={
+            'layout': {
+                'paper_bgcolor': '#F0F2F6',
+                'plot_bgcolor': 'rgba(0,0,0,0)',
+                'autosize': True,
+                'font': {'color': '#333'},  
+                'margin': {'t': 10, 'r': 10, 'b': 10, 'l': 10}, 
+            }
+        }
     )
-
     return fig
 
 # def update_graph(selected_season_range, selected_goal_type):
