@@ -18,8 +18,7 @@ messi_goals_df['Type'] = messi_goals_df['Type'].astype('string')
 messi_goals_df['Goal_assist'] = messi_goals_df['Goal_assist'].astype('string')
 messi_goals_df['Opponent'] = messi_goals_df['Opponent'].astype('string')
 messi_goals_df['Minute'] = messi_goals_df['Minute'].astype('string')
-messi_goals_df.head()
-
+messi_goals_df['Competition'] = messi_goals_df['Competition'].replace({'Champions League': 'UEFA Champions League'})
 def count_unique_dates(df, date_column_name):
     df[date_column_name] = pd.to_datetime(df[date_column_name])
 
@@ -112,21 +111,81 @@ app.layout = html.Div(children=[
                 options=[{'label': goal_type, 'value': goal_type} for goal_type in unique_goal_types],
                 value='total',  # Default value set to 'total'
                 multi=True  # Allow multiple selections
-                ,style={'margin-bottom': '100px'}
+                ,style={'margin-bottom': '10px'}
             )
         ])
          ])
           ]),
-]   
-             ),
-        html.H5('All data is true to 3/4/23 unless stated otherwise.', className='subheader', style={'margin-bottom': '2px'}),
+]  
+),
+     html.Div(className='histogram-container', children=[
+        dcc.Graph(id='goal-distribution-chart' ),  # Placeholder for the histogram
+        html.Div(className='histogram-controls-container', children=[
+        html.H4('Select Club and Competition:', className='histogram-text'),
+        dcc.RadioItems(
+            id='club-selector',
+            options=[
+                {'label': 'FC Barcelona', 'value': 'FC Barcelona'},
+                {'label': 'Paris Saint-Germain', 'value': 'Paris Saint-Germain'},
+                {'label': 'Both', 'value': 'Both'}
+            ],
+            value='FC Barcelona',  # default value
+            labelStyle={'display': 'inline-block'}
+        ),
+        dcc.Dropdown(
+            id='competition-selector',
+            className='dropdown',
+            options=[{'label': comp, 'value': comp} for comp in messi_goals_df['Competition'].unique()],
+            value=messi_goals_df['Competition'].unique()[0],
+        ),
+        ])
+   
+        ])
+,
+
+
+
+
+        html.H5('All data is true to 3/4/23 unless stated otherwise.', className='subheader', style={'margin-top': '170px'}),
+        
+
 ], style={'background': 'linear-gradient(to bottom, #211d9e, #a83250)'})
+
+
+@app.callback(
+    Output('goal-distribution-chart', 'figure'),
+    [Input('club-selector', 'value'),
+     Input('competition-selector', 'value')]
+)
+def update_histogram(selected_club, selected_competition):
+    if selected_club == 'Both':
+        df_filtered = messi_goals_df[messi_goals_df['Competition'] == selected_competition]
+    else:
+        df_filtered = messi_goals_df[(messi_goals_df['Club'] == selected_club) & (messi_goals_df['Competition'] == selected_competition)]
+
+    bins = list(range(0, 91, 5))
+    labels = [f'{i}-{i+4}' for i in range(0, 90, 5)]
+
+    df_filtered['Minute Group'] = pd.cut(df_filtered['Minute'].astype(int), bins=bins, right=False, labels=labels)
+    bin_counts = df_filtered['Minute Group'].value_counts().reindex(labels, fill_value=0)
+
+    fig = px.bar(bin_counts, x=bin_counts.index, y=bin_counts.values, title='Distribution of Messi Goals Over Minutes')
+    fig.update_layout(xaxis_title="Game Minute", yaxis_title="Number of Goals")
+    fig.update_layout(
+        plot_bgcolor='rgba(0,0,0,0)',  
+        paper_bgcolor='#F0F2F6',  
+    )
+    return fig
+
 
 @app.callback(
     Output('goals-graph', 'figure'),
     [Input('season-range-slider', 'value'),
      Input('goaltype-dropdown', 'value')]
 )
+
+
+
 def update_graph(selected_season_range, selected_goal_types):
     # Check if no goal types are selected
     if not selected_goal_types:
@@ -188,40 +247,7 @@ def update_graph(selected_season_range, selected_goal_types):
     )
     return fig
 
-# def update_graph(selected_season_range, selected_goal_type):
-#     # Check if no goal type is selected
-#     if not selected_goal_type:
-#         # Return a blank figure
-#         return px.line(title='Select a goal type to view data')
-
-#     start_season_index, end_season_index = selected_season_range
-#     selected_seasons = seasons[start_season_index:end_season_index + 1]
-    
-#     filtered_df = messi_goals_df[messi_goals_df['Season'].isin(selected_seasons)]
-
-#     # Initialize an empty DataFrame for the final data
-#     df_final = pd.DataFrame()
-
-#     # Process the selected goal type
-#     if selected_goal_type == 'total':
-#         df_agg = filtered_df.groupby('Season').size().reset_index(name='Goals')
-#     else:
-#         df_filtered = filtered_df[filtered_df['Type'] == selected_goal_type]
-#         df_agg = df_filtered.groupby('Season').size().reset_index(name='Goals')
-
-#     df_agg['Type'] = selected_goal_type  # Assign the selected goal type
-#     df_final = pd.concat([df_final, df_agg])
-
-#     # Sort df_final by 'Season' to maintain the correct order
-#     df_final = df_final.sort_values(by='Season')
-
-#     # Generate the figure using Plotly Express line chart
-#     fig = px.line(df_final, x='Season', y='Goals', color='Type', title='Goals for Club by Selected Type and Season', markers=True)
-#     fig.update_layout(xaxis_title='Season', yaxis_title='Number of Goals', xaxis={'type': 'category'})
-
-#     return fig
-
-
 
 if __name__ == '__main__': #run the app
-    app.run_server(debug=True)
+    # app.run_server(debug=True)
+    app.run(jupyter_mode='tab', debug=True)

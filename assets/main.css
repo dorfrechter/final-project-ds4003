@@ -173,3 +173,40 @@ P {
 .last-element{
     margin-bottom: 40px;
 }
+
+#goal-distribution-chart{
+   padding: 30px;
+   padding-bottom: 0%;
+}
+.histogram-text{
+    color: rgb(232, 195, 47);
+
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-left: 30px;
+
+}
+.histogram-controls-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 90%;
+}
+#competition-selector{
+    width: 800px;
+    
+}
+
+.Select-control .Select-value,
+.Select-control .Select-value-label,
+.Select-placeholder,
+.Select-value,
+.Select-value-label,
+.Select-input {
+    color: white !important;
+}
+#goal-distribution-chart{
+    
+}
