@@ -1,3 +1,23 @@
 # DS4003-hw4
 https://dor-final-test-5d1d99330280.herokuapp.com/ 
-    
+
+## Reflecting on the Dashboard Development Process
+
+Building this Lionel Messi statistics dashboard using Dash and Plotly was a very cool experience using libraries I have never used before, and that are not a part of the CS curriculum. This is great as it broadens my programming horizons and increases my versatility as a programmer. Overall, pandas, dash, plotly, seaborn, and the rest of the libraries we used were very enjoyable, not super difficult to learn, and extremly rewarding, creating very cool animations with very little code. Starting off with the project brainstorming, I knew I wanted to make something that has to do with Lionel Messi, since I am a huge soccer fan. I found a dataset with great specificty about all of his goals for Barcelona and PSG, and I immediatly knew this is what I wanted to work on. Firstly, I thought of the services my dashboard could provide. Who are my possible users? What information are they looking for? What is a good way to present it to them? After coming up with expected users for the app, I continued thinking about the UX and UI components of the Dashboard. I wanted to keep it very simple, so the application adhers to its sole purpose, while still being visually appealing and easy to use. I then cleaned the data using pandas, extracting the data I needed and manipulating certain categories to fit the models I wanted for the future graphs I was to create. Once the data was cleaned and ready, I began designing the dashboard. I first designed an image of what I roughly wanted it to look like with canva, and once I had something that I liked, I began coding. The first thing I did was create the overall structure for the page. This means that I created the HTML and CSS before the logic. I positioned the graphs, images, and widgets as I wanted, edited the css to fit the style I envisioned, and once the structure was complete I moved on to the logic. CSS was a bit challening, things that seem so easy in our heads can be a bit tricky to do, however, with a lot of digging through documentation online, I finished the websites structure. Next thing was the logic. I had to assigned ID's to each element I was going to make interactive, and then using callbacks, I could make the app interactive. The callbacks would then pass the parameters to my update functions that would update the graphs based on the user inputs to the graph widgets. I am quite happy with the overall product, as I think it is clean looking, adheres to its purpose, and very easy to use. It was a fun experience that improved both my technical abilities and my understanding of how to effectively communicate data insights through interactive tools.
+
+### Data Preparation and Cleaning
+The initial step involved data preparation and cleaning using Python's Pandas library. The dataset (`data1.csv`) contained comprehensive details about Messi's goals which required pruning to focus on relevant aspects like goals per season, minute of goals, and types of goals. This involved dropping unnecessary columns like 'Playing_Position', 'Matchday', etc., and standardizing data types for seamless processing. These activities highlighted the importance of thorough data cleaning and preparation as a foundation for any data-driven application.
+
+### Visualization with Plotly
+The core of the dashboard involved visualizing the data using Plotly, specifically through modules like `plotly.express` and `plotly.graph_objs`. The transition from static to interactive plots, such as histograms for goal distributions and line charts for seasonal performance, required thoughtful design choices. Handling multi-dimensional data and ensuring responsive updates to user inputs was both challenging and rewarding.
+
+### Challenges and Learning Experiences
+One of the main challenges was ensuring that user selections dynamically updated the visualizations. Implementing callbacks that respond to user inputs and modify the visual output accordingly was a key learning point. Additionally, ensuring the correct order and display of categorical data in histograms was a bit tricky, yet very neccessary to make the dashboard easy to understand.
+
+### Strengths and Professional Growth
+The development of this dashboard has significantly strengthened my skills in several areas:
+- **Data Manipulation and Analysis**: Deepening my understanding of Pandas for data cleaning and preparation.
+- **Interactive Visualizations**: Gaining advanced skills in Plotly to create compelling, interactive data visualizations.
+- **Web Development with Dash**: Integrating data science with web application development, providing a comprehensive toolkit for building data-driven web apps.
+- **Understandability of the User's Needs**: Putting myself in the shoes of the user to understand what service my applications should give to them.
+

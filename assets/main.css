@@ -196,6 +196,7 @@ P {
 }
 #competition-selector{
     width: 800px;
+    margin-left: 20px;
     
 }
 
@@ -207,6 +208,12 @@ P {
 .Select-input {
     color: white !important;
 }
-#goal-distribution-chart{
-    
+.histogram-header{
+    color: rgb(232, 195, 47); /* Your specified text color */
+    margin-bottom: 10px;
+    text-align: center;
+}
+.histogram-text{
+    margin-left: 180px;
+    margin-right: 20px;
 }

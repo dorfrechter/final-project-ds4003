@@ -3,8 +3,9 @@
 from dash import Dash, html, dcc
 from dash.dependencies import Input, Output  # Make sure to import Input and Output
 import pandas as pd
+import plotly.graph_objs as go
 import plotly.express as px
-messi_goals_df = pd.read_csv('data1.csv')
+messi_goals_df = pd.read_csv('data/data1.csv')
 messi_goals_df.drop('Playing_Position', axis=1, inplace=True)
 messi_goals_df.drop('Matchday', axis=1, inplace=True)
 messi_goals_df.drop('Date', axis=1, inplace=True)
@@ -119,27 +120,27 @@ app.layout = html.Div(children=[
 ]  
 ),
      html.Div(className='histogram-container', children=[
+         html.H2('Goal Distribution Over Minutes by Club and Competition', className='histogram-header'),
         dcc.Graph(id='goal-distribution-chart' ),  # Placeholder for the histogram
-        html.Div(className='histogram-controls-container', children=[
-        html.H4('Select Club and Competition:', className='histogram-text'),
-        dcc.RadioItems(
-            id='club-selector',
-            options=[
-                {'label': 'FC Barcelona', 'value': 'FC Barcelona'},
-                {'label': 'Paris Saint-Germain', 'value': 'Paris Saint-Germain'},
-                {'label': 'Both', 'value': 'Both'}
-            ],
-            value='FC Barcelona',  # default value
-            labelStyle={'display': 'inline-block'}
-        ),
-        dcc.Dropdown(
-            id='competition-selector',
-            className='dropdown',
-            options=[{'label': comp, 'value': comp} for comp in messi_goals_df['Competition'].unique()],
-            value=messi_goals_df['Competition'].unique()[0],
-        ),
-        ])
-   
+      html.Div(className='histogram-controls-container', children=[
+    html.H4('Select Clubs:', className='histogram-text'),
+    dcc.Checklist(
+        id='club-selector',
+        options=[
+            {'label': 'FC Barcelona', 'value': 'FC Barcelona'},
+            {'label': 'Paris Saint-Germain', 'value': 'Paris Saint-Germain'}
+        ],
+        value=['FC Barcelona'],  # Default selected value
+        labelStyle={'display': 'block'}
+    ),
+    dcc.Dropdown(
+        id='competition-selector',
+        className='dropdown',
+        options=[{'label': comp, 'value': comp} for comp in messi_goals_df['Competition'].unique()],
+        value=messi_goals_df['Competition'].unique()[0],  # Default selected value
+    )
+])
+
         ])
 ,
 
@@ -151,30 +152,45 @@ app.layout = html.Div(children=[
 
 ], style={'background': 'linear-gradient(to bottom, #211d9e, #a83250)'})
 
-
 @app.callback(
     Output('goal-distribution-chart', 'figure'),
     [Input('club-selector', 'value'),
      Input('competition-selector', 'value')]
 )
-def update_histogram(selected_club, selected_competition):
-    if selected_club == 'Both':
-        df_filtered = messi_goals_df[messi_goals_df['Competition'] == selected_competition]
-    else:
-        df_filtered = messi_goals_df[(messi_goals_df['Club'] == selected_club) & (messi_goals_df['Competition'] == selected_competition)]
+def update_histogram(selected_clubs, selected_competition):
+    # Filter the data for the selected competition and clubs
+    df_filtered = messi_goals_df[
+        (messi_goals_df['Club'].isin(selected_clubs)) & 
+        (messi_goals_df['Competition'] == selected_competition)
+    ]
 
+    # Define bins and labels for the minute intervals
     bins = list(range(0, 91, 5))
     labels = [f'{i}-{i+4}' for i in range(0, 90, 5)]
-
     df_filtered['Minute Group'] = pd.cut(df_filtered['Minute'].astype(int), bins=bins, right=False, labels=labels)
-    bin_counts = df_filtered['Minute Group'].value_counts().reindex(labels, fill_value=0)
 
-    fig = px.bar(bin_counts, x=bin_counts.index, y=bin_counts.values, title='Distribution of Messi Goals Over Minutes')
-    fig.update_layout(xaxis_title="Game Minute", yaxis_title="Number of Goals")
-    fig.update_layout(
-        plot_bgcolor='rgba(0,0,0,0)',  
-        paper_bgcolor='#F0F2F6',  
+    # Ensure categories (bins) are in the desired order
+    category_orders = {'Minute Group': labels}
+
+    # Create the histogram using Plotly Express
+    fig = px.histogram(
+        df_filtered, 
+        x='Minute Group', 
+        color='Club',  # Automatically assigns different colors
+        barmode='overlay',
+        nbins=len(bins)-1,
+        category_orders=category_orders  # Ensuring ordered categories
     )
+    
+    # Update layout
+    fig.update_layout(
+        xaxis_title="Game Minute",
+        yaxis_title="Number of Goals",
+        plot_bgcolor='rgba(0,0,0,0)',  
+        paper_bgcolor='#F0F2F6',
+    )
+    
+    
     return fig
 
 
@@ -213,15 +229,13 @@ def update_graph(selected_season_range, selected_goal_types):
 
     # Process other goal types
     for goal_type in selected_goal_types:
-        if goal_type != 'total':  # Exclude 'total' since it's already processed
+        if goal_type != 'total': 
             df_filtered = filtered_df[filtered_df['Type'] == goal_type]
             df_agg = df_filtered.groupby('Season').size().reset_index(name='Goals')
             df_agg['Type'] = goal_type
-            # Map the seasons to their respective order
+
             df_agg['Season_Order'] = df_agg['Season'].map(season_mapping)
             df_final = pd.concat([df_final, df_agg])
-
-    # Ensure the final DataFrame is sorted by the ordered season
     df_final = df_final.sort_values(by=['Season_Order', 'Type'])
 
     # Generate the figure using Plotly Express line chart
