@@ -213,7 +213,21 @@ P {
     margin-bottom: 10px;
     text-align: center;
 }
+.histogram-header1{
+    color: rgb(232, 195, 47); /* Your specified text color */
+    margin-bottom: 30px;
+    text-align: center;
+}
 .histogram-text{
     margin-left: 180px;
     margin-right: 20px;
+    text-align: center;
+}
+.histogram-text1{
+    color: rgb(232, 195, 47);
+    padding-left: 10%  ;
+    padding-right: 10%  ;
+    font-weight: 1200;
+    margin-bottom: 100px;
+    text-align: center;
 }

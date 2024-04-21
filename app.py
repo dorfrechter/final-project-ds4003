@@ -119,7 +119,10 @@ app.layout = html.Div(children=[
           ]),
 ]  
 ),
-     html.Div(className='histogram-container', children=[
+    html.Div(className='histogram-container', children=[
+    html.H2('Generational Talent - Why are Messi\s Numbers Superhuman?', className='histogram-header1'),         
+    html.H3('Lionel Messi’s career goal distribution reveals the patterns and peaks of a legendary footballer\'s scoring record. Throughout his illustrious career, Messi has shown remarkable consistency, scoring 672 goals in 778 appearances for FC Barcelona alone. See the above graph to check how those goals were spread throughout the years! Analyzing his goal distribution, it’s evident that Messi has a knack for scoring in crucial late-game moments, with a significant number of goals coming in the final 15 minutes of matches. His goal distribution across competitions is equally impressive: he has netted over 120 UEFA Champions League goals, showcasing his prowess on the biggest stage. At the club level, his contributions helped Barcelona secure numerous titles across La Liga, Copa Del Rey, and international tournaments, illustrating his critical role in the team\'s success during his tenure.'
+    ,className='histogram-text1'),
          html.H2('Goal Distribution Over Minutes by Club and Competition', className='histogram-header'),
         dcc.Graph(id='goal-distribution-chart' ),  # Placeholder for the histogram
       html.Div(className='histogram-controls-container', children=[
@@ -143,10 +146,6 @@ app.layout = html.Div(children=[
 
         ])
 ,
-
-
-
-
         html.H5('All data is true to 3/4/23 unless stated otherwise.', className='subheader', style={'margin-top': '170px'}),
         
 
@@ -263,5 +262,5 @@ def update_graph(selected_season_range, selected_goal_types):
 
 
 if __name__ == '__main__': #run the app
-    # app.run_server(debug=True)
-    app.run(jupyter_mode='tab', debug=True)
+     app.run_server(debug=True)
+    #app.run(jupyter_mode='tab', debug=True)
