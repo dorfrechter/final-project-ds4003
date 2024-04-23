@@ -168,7 +168,7 @@ P {
     padding: 10px;
     border-radius: 10px;
     text-align: center;
-    background-color: rgb(163, 49, 87);
+    background-color: rgb(151, 54, 86);
 }
 .last-element{
     margin-bottom: 40px;
@@ -230,4 +230,42 @@ P {
     font-weight: 1200;
     margin-bottom: 100px;
     text-align: center;
+}
+.map-p{
+    color: rgb(232, 195, 47);
+    padding-left: 10%  ;
+    padding-right: 10%  ;
+    font-weight: 1200;
+    margin-bottom: 30px;
+    margin-top: 50px;
+    text-align: center;
+
+}
+.map{
+    padding: 20px;
+    padding-left: 160px;
+    padding-right: 150px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    
+
+}
+.map-dropdown{
+    padding-left: 20px;
+    width: 500px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.map-controls-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 90%;
 }

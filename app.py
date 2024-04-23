@@ -5,6 +5,27 @@ from dash.dependencies import Input, Output  # Make sure to import Input and Out
 import pandas as pd
 import plotly.graph_objs as go
 import plotly.express as px
+
+barca_staff = pd.read_csv('data/data.csv')
+barca_staff=barca_staff.drop_duplicates(subset=['full_name'], keep='first')
+country_counts = barca_staff['country'].value_counts().reset_index()
+country_counts.columns = ['country', 'count']
+unique_positions = barca_staff['position'].unique().tolist()
+
+
+# New list to hold positions excluding 'Manager'
+filtered_positions = []
+for position in unique_positions:
+    if position != 'Manager' and position != 'Ass. Manager' and position != 'Goalkeeping Coach' and position!='Game Analyst' and position!='Athletic Coach':
+        filtered_positions.append(position)
+
+# Assign the filtered list back to unique_positions if necessary
+unique_positions = filtered_positions
+
+
+
+
+
 messi_goals_df = pd.read_csv('data/data1.csv')
 messi_goals_df.drop('Playing_Position', axis=1, inplace=True)
 messi_goals_df.drop('Matchday', axis=1, inplace=True)
@@ -68,6 +89,24 @@ seasons = [f"{y:02d}/{(y+1)%100:02d}" for y in range(4, 23)]
 season_indices = list(range(len(seasons)))
 marks = {i: season for i, season in zip(season_indices, seasons)}
 
+map_fig = px.choropleth(
+    country_counts,
+    locations="country",
+    locationmode='country names',
+    color="count",
+    color_continuous_scale=px.colors.sequential.Plasma,
+    labels={'count':'Number of Players'}
+)
+
+# Update the layout to add more visual context
+map_fig.update_layout(
+    title_text='Global Distribution of FC Barcelona Players',
+    geo=dict(
+        showframe=False,
+        showcoastlines=False,
+        projection_type='equirectangular'
+    )
+)
 app.layout = html.Div(children=[
     html.Img(src='assets/images/messi_smile.png', className='messi-image'),
     html.Img(src='assets/images/BarcaLogo.png', style={'position': 'absolute', 'top': '0', 'left': '0', 'width': '100px', 'height': '100px', 'padding': '30px', 'margin-left':'35   px'}),
@@ -144,12 +183,71 @@ app.layout = html.Div(children=[
     )
 ])
 
+        ]),
+        html.Div(className='map-container', children=[
+            
+            html.H3('Lionel Messi\'s journey to becoming a football legend began when he moved from his native Argentina to Barcelona at just 13 years old. Joining FC Barcelona\'s famed youth academy, La Masia, he quickly stood out as an extraordinary talent. La Masia is renowned for its rigorous training regime and a strong emphasis on technical skills, which perfectly suited Messi\'s natural abilities and playing style. Unlike many of his peers, Messi\'s progression through the ranks was meteoric, marked by a combination of innate skill and an unyielding dedication to improving his game. What makes Messi\'s rise to the top particularly notable is the context of his success; as a non-Spanish player in a club that has historically been dominated by home-grown talents, Messi\'s ascent within FC Barcelona highlights both his exceptional ability and the inclusive philosophy of the club, which values talent over nationality(See the below graph for the distribution of FC Barcelona players by country). His journey from a young talent at La Masia to becoming one of the greatest players of all time is not just a testament to his individual prowess but also to Barcelona\'s commitment to nurturing diverse talent.', className='map-p'),
+               dcc.Graph(id='player-distribution-map', className='map'),
+    html.Div(className='map-controls-container', children=[
+            html.H4('Select Positions:', className='histogram-text'),
+    dcc.Dropdown(
+        id='position-dropdown',
+        options=[{'label': pos, 'value': pos} for pos in unique_positions],
+        value=unique_positions,  # Default to all positions selected
+        multi=True,  # Allow multiple selections
+        className='map-dropdown'
+    ),]),
+
+            
         ])
 ,
-        html.H5('All data is true to 3/4/23 unless stated otherwise.', className='subheader', style={'margin-top': '170px'}),
+        html.H5('All data is true to 3/4/23 unless stated otherwise.', className='subheader', style={'margin-top': '120px'}),
         
 
 ], style={'background': 'linear-gradient(to bottom, #211d9e, #a83250)'})
+
+
+
+# Callback to update the map based on selected positions
+@app.callback(
+    Output('player-distribution-map', 'figure'),
+    [Input('position-dropdown', 'value')]
+)
+def update_map(selected_positions):
+    # Filter the dataframe based on selected positions
+    filtered_df = barca_staff[barca_staff['position'].isin(selected_positions)]
+    country_counts = filtered_df['country'].value_counts().reset_index()
+    country_counts.columns = ['country', 'count']
+
+    # Create the map graph using Plotly Express
+    fig = px.choropleth(
+        country_counts,
+        locations="country",
+        locationmode='country names',
+        color="count",
+        color_continuous_scale=px.colors.sequential.Plasma,
+        labels={'count': 'Number of Players'}
+    )
+
+    # Update layout to add more visual context
+    fig.update_layout(
+        title_text='Global Distribution of FC Barcelona Players by Selected Positions',
+        geo=dict(
+            showframe=False,
+            showcoastlines=False,
+            projection_type='equirectangular',
+        ),
+        paper_bgcolor='#F0F2F6',  
+        plot_bgcolor='rgba(0,0,0,0)' 
+    )
+    return fig
+
+
+
+
+
+
+
 
 @app.callback(
     Output('goal-distribution-chart', 'figure'),
@@ -262,5 +360,5 @@ def update_graph(selected_season_range, selected_goal_types):
 
 
 if __name__ == '__main__': #run the app
-     app.run_server(debug=True)
-    #app.run(jupyter_mode='tab', debug=True)
+    #app.run_server(debug=True)
+    app.run(jupyter_mode='tab', debug=True)
