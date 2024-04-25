@@ -202,6 +202,7 @@ app.layout = html.Div(children=[
         ])
 ,
         html.H5('All data is true to 3/4/23 unless stated otherwise.', className='subheader', style={'margin-top': '120px'}),
+        html.A('GitHub Link!', href='https://github.com/dorfrechter/final-project-ds4003', style={'color': 'white'},target='_blank',className='last-element'),
         
 
 ], style={'background': 'linear-gradient(to bottom, #211d9e, #a83250)'})
